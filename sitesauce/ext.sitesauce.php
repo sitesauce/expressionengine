@@ -9,6 +9,7 @@ class Sitesauce_ext
     var $docs_url = '';
 
     public $settings = [];
+
     public static $entryId = null;
 
     public function __construct($settings = [])
@@ -21,7 +22,7 @@ class Sitesauce_ext
         file_put_contents(__DIR__.'/../../language/english/sitesauce_lang.php', '');
 
         $this->settings = [
-            'build_hook'   => '',
+            'build_hook'   => null,
         ];
 
         ee()->db->insert('extensions', [
@@ -93,7 +94,7 @@ class Sitesauce_ext
 
     public function call_build_hook($entry, $values)
     {
-        if (is_null(static::$entryId)) {
+        if (is_null(static::$entryId) && ! is_null($this->settings['build_hook'])) {
             static::$entryId = $values['entry_id'];
 
             file_get_contents($this->settings['build_hook']);
